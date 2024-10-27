@@ -1,8 +1,6 @@
 # Restic Backup Script
 
-Esse é um script escrito em Python que eu uso para realizar o backup de meu sistema e de meus arquivos usando a ferramenta [restic](https://restic.net).
-
-A vantagem desse script comparado com utilizar restic diretamente é a integração com um Discord webhook para enviar mensagens de estatísticas de backup e notificações de avisos ou erros durante o processo de backup.
+Esse é um script escrito em Python que eu uso para realizar o backup de meu sistema e de meus arquivos usando a ferramenta [restic](https://restic.net). Ele suporta o uso de um webhook do Discord para ficar informado de quando backups, erros e ou avisos ocorrem durante o processo.
 
 > [!NOTE]
 > Assume-se nesses exemplos que o local em que o script está armazenado é `/home/USER/restic` (aonde USER é o nome do usuário realizando o backup) e que o repositório de backup se encontra em `/mnt/HDD/restic`.
@@ -10,12 +8,29 @@ A vantagem desse script comparado com utilizar restic diretamente é a integraç
 > [!WARNING]
 > Esse script foi testado apenas em um sistema Linux, mas provavelmente também funcionaria em um sistema Windows.
 
+A vantagem desse script comparado com utilizar restic diretamente é a integração com um Discord webhook para enviar mensagens de estatísticas de backup e notificações de avisos ou erros durante o processo de backup.
+
+Ainda sim é possível executar o script com o parâmetro `comandos` para imprimir os comando que o script irá utilizar para interagir com o repositório restic, permitindo o seu uso de maneira separada:
+
+```bash
+cd ~/restic
+venv/bin/python3 backup.py comandos
+```
+
+```bash
+UNLOCK: restic unlock --repo /mnt/HDD/restic
+BACKUP: restic backup --repo /mnt/HDD/restic --files-from /home/USER/restic/include_list.txt --exclude-file /home/USER/restic/exclude_list.txt --exclude-caches --tag python
+FORGET: restic forget --repo /mnt/HDD/restic --keep-last 10 --keep-daily 7 --keep-weekly 4 --keep-monthly 12 --keep-yearly 1 --keep-tag keep --prune 
+CHECK:  restic check --repo /mnt/HDD/restic --read-data-subset=10%
+STATS:  restic stats --repo /mnt/HDD/restic --mode raw-data
+```
+
 ## Configurando
 
 Baixe o script:
 
 ```bash
-git clone "https://github.com/DaviAMSilva/restic-backup-script" "~/restic"
+git clone "https://github.com/DaviAMSilva/restic-backup-script.git" "~/restic"
 ```
 
 Instale as dependências diretamente ou usando um ambiente virtual:
@@ -59,15 +74,16 @@ BACKUP_REPO="/mnt/HDD/restic"
 INCLUDE_LIST="/home/USER/restic/include_list.txt"
 EXCLUDE_LIST="/home/USER/restic/exclude_list.txt"
 
-BACKUP_EXTRA_ARGS="--tag python"
+BACKUP_EXTRA_ARGS="--exclude-caches --tag python"
 FORGET_EXTRA_ARGS=""
-CHECK_EXTRA_ARGS=""
+CHECK_EXTRA_ARGS="--read-data-subset=10%"
+STATS_EXTRA_ARGS="--mode raw-data"
 
-RETENTION_LAST="10"
-RETENTION_DAILY="7"
-RETENTION_WEEKLY="4"
-RETENTION_MONTHLY="12"
-RETENTION_YEARLY="1"
+KEEP_LAST="10"
+KEEP_DAILY="7"
+KEEP_WEEKLY="4"
+KEEP_MONTHLY="12"
+KEEP_YEARLY="1"
 KEEP_TAG="keep"
 ```
 
@@ -99,7 +115,14 @@ A seguinte configuração cron realizará o backup todo dia meia-noite, salvando
 0 0 * * * /home/USER/restic/venv/bin/python3 /home/USER/restic/backup.py >> /home/USER/restic/restic.log 2>&1
 ```
 
-Use o comando `crontab -e` para editar a sua configuração cron e inserir a configuração acima. Ou, se precisar realizar o backup como root, faça a mesma edição, mas utilizando-se da função sudo: `sudo crontab -e`.
+Use o comando `crontab -e` para editar a sua configuração cron e inserir a configuração acima.
 
-> [!NOTE]
-> No sistema Windows a ferramenta equivalente para automatização desse tipo é o Agendador de Tarefas.
+Ou, se precisar realizar o backup como root, faça a mesma edição, mas utilizando-se da função sudo: `sudo crontab -e`.
+
+No sistema Windows a ferramenta equivalente para automatização desse tipo é o Agendador de Tarefas.
+
+### Planos para o futuro
+
+- [ ] Suportar backups para múltiplos destinos
+- [ ] Suportar backups para destinos em nuvem
+- [ ] Permitir escolher uma lista dos comandos a serem executados

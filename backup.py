@@ -149,6 +149,18 @@ def main():
 
 
 
+    # Se for utilizado o parâmetro 'comandos' exibir todos os comandos que o script iria utilizar
+    if len(sys.argv) > 1 and sys.argv[1] == "comandos":
+        print("UNLOCK: " + f"restic unlock --repo {BACKUP_REPO}")
+        print("BACKUP: " + " ".join(backup_command))
+        print("FORGET: " + " ".join(forget_command))
+        print("CHECK:  " + " ".join(check_command))
+        print("STATS:  " + " ".join(stats_command))
+
+        exit(0)
+
+
+
     output = {
         "backup": {"status": "IGNORADO", "command": backup_command, "text": { "stdout": "", "stderr": ""}},
         "forget": {"status": "IGNORADO", "command": forget_command, "text": { "stdout": "", "stderr": ""}},
