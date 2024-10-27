@@ -1,0 +1,1 @@
+0 0 * * * /home/USER/restic/venv/bin/python3 /home/USER/restic/backup.py >> /home/USER/restic/restic.log 2>&1

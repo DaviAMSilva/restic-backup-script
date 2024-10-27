@@ -1,0 +1,17 @@
+# Permite apenas alguns diretórios específicos dentro do diretório do usuário
+/home/USER/*
+!/home/USER/Desktop
+!/home/USER/Documents
+!/home/USER/Downloads
+!/home/USER/Pictures
+!/home/USER/Videos
+
+# Ignorar lixeira do disco rígido
+/mnt/HDD/.Trash-1000
+
+# Arquivos temporários
+.cache
+.env
+.git
+node_modules
+venv

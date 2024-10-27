@@ -1,0 +1,5 @@
+.env
+include_list.txt
+exclude_list.txt
+*.log
+venv

@@ -1,0 +1,5 @@
+# Diretório do usuário
+/home/USER
+
+# Segundo disco
+/mnt/HDD
