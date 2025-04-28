@@ -219,7 +219,7 @@ def main():
         # Se houver um erro, mas for no comando 'check' ou o código de retorno é 3 marcar como apenas um aviso
         # https://restic.readthedocs.io/en/stable/075_scripting.html#exit-codes
         output[e_type]["text"] = e_output
-        output[e_type]["status"] = "AVISO" if (e.cmd == "check" or e.returncode == 3) else "ERRO"
+        output[e_type]["status"] = "AVISO" if (e_type == "check" or e.returncode == 3) else "ERRO"
 
     timings["end"] = time.time()
 
